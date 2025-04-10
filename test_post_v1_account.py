@@ -1,14 +1,14 @@
 import requests
+from json import loads
+
 
 
 def test_post_v1_account():
     # Регистрация пользователя
 
-
-    login = 'janmes'
+    login = 'mystery7'
     password = '12345678'
     email = f'{login}@mail.ru'
-
     json_data = {
         'login': login,
         'email': email,
@@ -18,12 +18,9 @@ def test_post_v1_account():
     response = requests.post('http://5.63.153.31:5051/v1/account', json=json_data)
     print(response.status_code)
     print(response.text)
-
+    assert response.status_code == 201, f"Пользователь не был создан {response.json()}"
 
     # Получить письма из почтового сервера
-
-
-
     params = {
         'limit': '50',
     }
@@ -31,24 +28,42 @@ def test_post_v1_account():
     response = requests.get('http://5.63.153.31:5025/api/v2/messages', params=params,  verify=False)
     print(response.status_code)
     print(response.text)
+    assert response.status_code == 200, "Письма не были получены"
+
+
     # Получить активационный токен
-    ...
+    token = None
+    for item in response.json()['items']:
+        user_data = item['Content']['Body']
+        # Если тело начинается с открывающей фигурной скобки, предполагаем, что это JSON
+        if user_data.strip().startswith('{'):
+            user_data = loads(user_data)  # Теперь user_data — это уже словарь
+            user_login = user_data['Login']
+            if user_login == login:
+                token = user_data['ConfirmationLinkUrl'].split('/')[-1]
+
+    assert token is not None, f"Токен для пользователя {login} не был получен"
     # Активация пользователя
     headers = {
         'accept': 'text/plain',
     }
 
-    response = requests.put('http://5.63.153.31:5051/v1/account/bbc94440-2a57-4ffc-bea7-17e3c3d8e508', headers=headers)
+    response = requests.put(f'http://5.63.153.31:5051/v1/account/{token}', headers=headers)
+
     print(response.status_code)
     print(response.text)
+    assert response.status_code == 200, "Пользователь не был активирован"
+
     # Авторизоваться
 
     json_data = {
-        'login': 'janmes2',
-        'password': '12345678',
+        'login': login,
+        'password': password,
         'rememberMe': True,
     }
 
     response = requests.post('http://5.63.153.31:5051/v1/account/login', json=json_data)
+
     print(response.status_code)
     print(response.text)
+    assert response.status_code == 200, "Пользователь не смог авторизоваться"
