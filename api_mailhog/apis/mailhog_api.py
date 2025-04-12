@@ -1,7 +1,7 @@
 import requests
 
 
-class MailHogApi:
+class MailhogApi:
     def __init__(
             self,
             host,
@@ -10,7 +10,7 @@ class MailHogApi:
         self.host = host
         self.email = headers
 
-    def get_apiv2_messages(
+    def get_api_v2_messages(
             self,
             limit=50
             ):
