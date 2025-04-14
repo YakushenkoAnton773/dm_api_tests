@@ -22,6 +22,7 @@ def test_put_v1_account_token():
     login = f'henry{data}'
     email = f'{login}@mail.ru'
     password = '123456789'
+
     json_data = {
         'login': login,
         'email': email,

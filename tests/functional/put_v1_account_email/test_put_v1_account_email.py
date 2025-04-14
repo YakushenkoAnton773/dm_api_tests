@@ -22,6 +22,8 @@ def test_change_email():
     data = now.strftime("%d_%m_%Y_%H_%M_%S")
     login = f'henry{data}'
     email = f'{login}@mail.ru'
+    password = '123456789'
+
     json_data = {
         'login': login,
         'email': email,
