@@ -46,6 +46,6 @@ class AccountApi(RestClient):
         """
         response = self.put(
             path=f'/v1/account/email',
-            json_data=json_data
+            json=json_data
         )
         return response
