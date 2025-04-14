@@ -11,7 +11,7 @@ def test_change_email():
     login_api = LoginApi(host='http://5.63.153.31:5051')
     mailhog_api = MailhogApi(host='http://5.63.153.31:5025')
 
-    login = 'jjkon5'
+    login = 'mark3'
     password = '12345678'
     email = f'{login}@mail.ru'
     json_data = {
