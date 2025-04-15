@@ -4,7 +4,13 @@ from json import JSONDecodeError
 
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
+from retrying import retry
 
+def retry_if_result_none(
+        result
+):
+    """Return True if we should retry (in this case when result is None), False otherwise"""
+    return result is None
 
 def retrier(
         function
@@ -81,7 +87,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_email(json_data=change_email_data)
         assert response.status_code == 200, f"Email не был обновлен: {response.text}"
 
-    @retrier
+    @retry(stop_max_attempt_number=5, retry_on_result=retry_if_result_none, wait_fixed=1000)
     def get_activation_token_by_login(
             self,
             login
