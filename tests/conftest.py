@@ -1,3 +1,4 @@
+import time
 from collections import namedtuple
 
 import pytest
@@ -52,6 +53,7 @@ def auth_account_helper(mailhog_api):
 
 @pytest.fixture()
 def prepare_user():
+    time.sleep(1)
     now = datetime.now()
     data = now.strftime("%d_%m_%Y_%H_%M_%S")
     login = f'henry1{data}'
