@@ -56,7 +56,7 @@ def prepare_user():
     time.sleep(1)
     now = datetime.now()
     data = now.strftime("%d_%m_%Y_%H_%M_%S")
-    login = f'henry1{data}'
+    login = f'henry12{data}'
     email = f'{login}@mail.ru'
     password = '123456789'
     user = namedtuple("User", ["login", "password", "email"])
