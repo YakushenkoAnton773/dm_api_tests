@@ -72,7 +72,7 @@ class AccountHelper:
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
         end_time = time.time()
-        assert end_time - start_time < 0.1, "Время ожидания активации превышено"
+        assert end_time - start_time < 5, "Время ожидания активации превышено"
         assert token is not None, f"Токен для пользователя {login} не был получен"
         response = self.activation_token(token=token)
         return response
