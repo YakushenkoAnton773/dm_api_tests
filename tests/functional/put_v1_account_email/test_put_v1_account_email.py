@@ -1,6 +1,7 @@
 import time
+from dm_api_account.models.login_credentials import LoginCredentials
 
-def test_change_email(account_helper, prepare_user):
+def test_put_v1_account_email(account_helper, prepare_user):
     login = prepare_user.login
     password = prepare_user.password
     email = prepare_user.email
@@ -10,12 +11,12 @@ def test_change_email(account_helper, prepare_user):
     account_helper.change_email(login=login, password=password, new_email=new_email)
 
     # Пытаемся войти, получаем 403
-    json_data = {
-        'login': login,
-        'password': password,
-        'remember_me': True,
-    }
-    response = account_helper.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+    login_credentials = LoginCredentials(
+        login=login,
+        password=password,
+        remember_me=True
+    )
+    response = account_helper.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials, validate_response=False)
     assert response.status_code == 403, "Пользователь авторизован"
 
 
