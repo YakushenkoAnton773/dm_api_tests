@@ -33,8 +33,9 @@ class User(BaseModel):
     online: datetime = Field(None, alias='smallPictureUrl')
     name: str = Field(None, alias='smallPictureUrl')
     location: str = Field(None, alias='smallPictureUrl')
-    registration: datetime = Field(None, alias='smallPictureUrl')
-
+    registration: Optional[datetime] = Field(
+        None, description='User registration moment'
+    )
 
 class UserEnvelope(BaseModel):
     model_config = ConfigDict(extra="forbid")
