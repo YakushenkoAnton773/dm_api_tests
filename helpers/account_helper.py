@@ -1,7 +1,6 @@
 import json
 import time
 from json import JSONDecodeError
-
 from dm_api_account.models.change_email import ChangeEmail
 from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
@@ -104,7 +103,7 @@ class AccountHelper:
             remember_me: bool = True,
             validate_response=False,
             validate_headers=False
-    ):
+            ):
         login_credentials = LoginCredentials(
             login=login,
             password=password,
@@ -130,12 +129,10 @@ class AccountHelper:
             email=new_email
         )
 
-        # вернёт чистый requests.Response, чтобы мы могли проверить статус
         response = self.dm_account_api.account_api.put_v1_account_email(
             change_email=payload,
-            validate_response=False
+            validate_response=True
         )
-        assert response.status_code == 200, f"Email не был обновлен: {response.text}"
         return response
 
     def change_password(
@@ -157,7 +154,7 @@ class AccountHelper:
         reset_payload = ResetPassword(login=login, email=email)
         self.dm_account_api.account_api.post_v1_account_password(
             reset_password=reset_payload,
-            validate_response=False
+            validate_response=True
         )
 
         pass_token = self.get_token(login=login, token_type="reset")
@@ -240,6 +237,5 @@ class AccountHelper:
             self,
             token
     ):
-        response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=False)
-        assert response.status_code == 200, "Пользователь не был активирован"
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=True)
         return response
