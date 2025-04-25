@@ -101,25 +101,20 @@ class AccountHelper:
             password: str,
             remember_me: bool = True,
             validate_response: bool = False,
-            check_token_header: bool = True
+            validate_headers=False
     ):
-        login_credentials = LoginCredentials(login=login, password=password, remember_me=remember_me)
-        resp = self.dm_account_api.login_api.post_v1_account_login(
+        login_credentials = LoginCredentials(
+            login=login,
+            password=password,
+            remember_me=remember_me
+        )
+        response = self.dm_account_api.login_api.post_v1_account_login(
             login_credentials=login_credentials,
             validate_response=validate_response
         )
-
-        # только если разрешено — проверяем заголовок
-        if check_token_header:
-            token = resp.headers.get("x-dm-auth-token")
-            assert token, "Токен для пользователя не был получен"
-            hdr = {
-                "x-dm-auth-token": token
-            }
-            self.dm_account_api.login_api.set_headers(hdr)
-            self.dm_account_api.account_api.set_headers(hdr)
-
-        return resp
+        if validate_headers:
+            assert response.headers["x-dm-auth-token"], "Токен для пользователя не был получен"
+        return response
 
     def change_email(
             self,

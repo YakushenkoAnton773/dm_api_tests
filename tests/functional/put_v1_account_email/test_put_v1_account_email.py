@@ -9,7 +9,7 @@ def test_put_v1_account_email(account_helper, prepare_user):
     account_helper.user_login(login=login, password=password, validate_response=False)
     account_helper.change_email(login=login, password=password, new_email=new_email)
 
-    account_helper.user_login(login=login, password=password, check_token_header=False)
+    account_helper.user_login(login=login, password=password, validate_headers=False)
 
     token = account_helper.get_activation_token_by_login(login=login)
     assert token is not None, f"Токен для пользователя {login} не был получен"
