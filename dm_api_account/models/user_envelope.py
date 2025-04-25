@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import (
+    List,
+    Optional,
+    Any,
+)
 from pydantic import (
     BaseModel,
     Field,
@@ -33,10 +37,11 @@ class User(BaseModel):
     online: datetime = Field(None, alias='smallPictureUrl')
     name: str = Field(None, alias='smallPictureUrl')
     location: str = Field(None, alias='smallPictureUrl')
-    registration: datetime = Field(None, alias='smallPictureUrl')
-
+    registration: Optional[datetime] = Field(
+        None, description='User registration moment'
+    )
 
 class UserEnvelope(BaseModel):
     model_config = ConfigDict(extra="forbid")
     resource: Optional[User] = None
-    metadata: Optional[str] = None
+    metadata: Optional[Any] = Field("None", description='Additional metadata')

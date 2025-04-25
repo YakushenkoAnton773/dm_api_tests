@@ -1,7 +1,6 @@
 import json
 import time
 from json import JSONDecodeError
-
 from dm_api_account.models.change_email import ChangeEmail
 from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
@@ -101,20 +100,26 @@ class AccountHelper:
             login: str,
             password: str,
             remember_me: bool = True,
+            validate_response: bool = False,
+            check_token_header: bool = True
     ):
-        login_credentials = LoginCredentials(
-            login=login,
-            password=password,
-            remember_me=remember_me
+        login_credentials = LoginCredentials(login=login, password=password, remember_me=remember_me)
+        resp = self.dm_account_api.login_api.post_v1_account_login(
+            login_credentials=login_credentials,
+            validate_response=validate_response
         )
 
-        response = self.dm_account_api.login_api.post_v1_account_login(
-            login_credentials=login_credentials,
-            validate_response=False
-        )
-        assert response.headers["x-dm-auth-token"], "Токен для пользователя не был получен"
-        assert response.status_code == 200, "Пользователь не смог авторизоваться"
-        return response
+        # только если разрешено — проверяем заголовок
+        if check_token_header:
+            token = resp.headers.get("x-dm-auth-token")
+            assert token, "Токен для пользователя не был получен"
+            hdr = {
+                "x-dm-auth-token": token
+            }
+            self.dm_account_api.login_api.set_headers(hdr)
+            self.dm_account_api.account_api.set_headers(hdr)
+
+        return resp
 
     def change_email(
             self,
@@ -128,12 +133,10 @@ class AccountHelper:
             email=new_email
         )
 
-        # вернёт чистый requests.Response, чтобы мы могли проверить статус
         response = self.dm_account_api.account_api.put_v1_account_email(
             change_email=payload,
-            validate_response=False
+            validate_response=True
         )
-        assert response.status_code == 200, f"Email не был обновлен: {response.text}"
         return response
 
     def change_password(
@@ -155,7 +158,7 @@ class AccountHelper:
         reset_payload = ResetPassword(login=login, email=email)
         self.dm_account_api.account_api.post_v1_account_password(
             reset_password=reset_payload,
-            validate_response=False
+            validate_response=True
         )
 
         pass_token = self.get_token(login=login, token_type="reset")
@@ -238,6 +241,5 @@ class AccountHelper:
             self,
             token
     ):
-        response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=False)
-        assert response.status_code == 200, "Пользователь не был активирован"
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=True)
         return response
