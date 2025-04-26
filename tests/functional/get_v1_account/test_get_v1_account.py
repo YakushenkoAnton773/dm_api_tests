@@ -1,25 +1,22 @@
 from datetime import datetime
-from checkers.http_ckeckers import check_status_code_http
-from hamcrest import (
+
+from assertpy import (
+    soft_assertions,
     assert_that,
-    has_property,
-    starts_with,
-    all_of,
-    instance_of,
 )
 
+from checkers.http_ckeckers import check_status_code_http
+from dm_api_account.models.user_details_envelope import UserRole
 
 
 def test_get_v1_account_auth(
         auth_account_helper
 ):
         response = auth_account_helper.dm_account_api.account_api.get_v1_account()
-        assert_that(
-            response, all_of(
-                has_property('resource', has_property('login', starts_with("mystery"))),
-                has_property('resource', has_property('registration', instance_of(datetime)))
-            )
-        )
+        with soft_assertions():
+            assert_that(response.resource.login).is_equal_to("mystery15")
+            assert_that(response.resource.online).is_instance_of(datetime)
+            assert_that(response.resource.roles).contains(UserRole.guest, UserRole.player)
 
 
 def test_get_v1_account_no_auth(
