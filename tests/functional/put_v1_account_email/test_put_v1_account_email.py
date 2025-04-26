@@ -1,5 +1,7 @@
 import time
-from dm_api_account.models.login_credentials import LoginCredentials
+
+from checkers.http_ckeckers import check_status_code_http
+
 
 def test_put_v1_account_email(account_helper, prepare_user):
     login = prepare_user.login
@@ -7,17 +9,11 @@ def test_put_v1_account_email(account_helper, prepare_user):
     email = prepare_user.email
     new_email = f'new{int(time.time())}@test.com'
     account_helper.register_new_user(login=login,password=password, email=email)
-    account_helper.user_login(login=login, password=password)
+    account_helper.user_login(login=login, password=password, validate_response=True)
     account_helper.change_email(login=login, password=password, new_email=new_email)
 
-    # Пытаемся войти, получаем 403
-    login_credentials = LoginCredentials(
-        login=login,
-        password=password,
-        remember_me=True
-    )
-    response = account_helper.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials, validate_response=False)
-    assert response.status_code == 403, "Пользователь авторизован"
+    with check_status_code_http(403, 'User is inactive. Address the technical support for more details'):
+        account_helper.user_login(login=login, password=password, validate_headers=False)
 
 
     token = account_helper.get_activation_token_by_login(login=login)

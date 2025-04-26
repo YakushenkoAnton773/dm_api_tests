@@ -15,7 +15,7 @@ class LoginApi(RestClient):
         :return:
         """
         response = self.post(
-            path=f'/v1/account/login',
+            path='/v1/account/login',
             json=login_credentials.model_dump(exclude_none=True,by_alias=True)
         )
         if validate_response:
