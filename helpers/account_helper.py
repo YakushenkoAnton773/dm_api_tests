@@ -104,6 +104,7 @@ class AccountHelper:
             validate_response=False,
             validate_headers=False
             ):
+
         login_credentials = LoginCredentials(
             login=login,
             password=password,
@@ -239,3 +240,4 @@ class AccountHelper:
     ):
         response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=True)
         return response
+
