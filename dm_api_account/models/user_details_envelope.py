@@ -124,3 +124,4 @@ class UserDetailsEnvelope(BaseModel):
 
     resource: Optional[UserDetails] = None
     metadata: Optional[Any] = Field("None", description='Additional metadata')
+
