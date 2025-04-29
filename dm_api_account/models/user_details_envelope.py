@@ -5,7 +5,6 @@ from pydantic import (
     BaseModel,
     StrictStr,
     Field,
-    Extra,
     ConfigDict,
 )
 from typing import (
@@ -125,3 +124,4 @@ class UserDetailsEnvelope(BaseModel):
 
     resource: Optional[UserDetails] = None
     metadata: Optional[Any] = Field("None", description='Additional metadata')
+
