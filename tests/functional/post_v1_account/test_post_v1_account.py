@@ -41,6 +41,7 @@ def test_post_v1_account(
                 )
             )
         )
+
     )
 
 
@@ -68,3 +69,4 @@ def test_post_v1_account_invalid_credentials(
 ):
     with check_status_code_http(expected_status_code=expected_status_code, expected_message=error_message):
          account_helper.register_user_without_activate(login=login, password=password, email=email)
+
