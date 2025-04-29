@@ -66,7 +66,8 @@ class AccountHelper:
             self,
             login: str,
             password: str,
-            email: str
+            email: str,
+            with_activate=True
     ):
         registration = Registration(
             login=login,
@@ -74,15 +75,19 @@ class AccountHelper:
             email=email
 
         )
-        response = self.dm_account_api.account_api.post_v1_account(registration=registration)
-        assert response.status_code == 201, f"Пользователь не был создан {response.json()}"
-        start_time = time.time()
-        token = self.get_activation_token_by_login(login=login)
-        end_time = time.time()
-        assert end_time - start_time < 5, "Время ожидания активации превышено"
-        assert token is not None, f"Токен для пользователя {login} не был получен"
-        response = self.activation_token(token=token)
-        return response
+        if with_activate:
+            response = self.dm_account_api.account_api.post_v1_account(registration=registration)
+            assert response.status_code == 201, f"Пользователь не был создан {response.json()}"
+            start_time = time.time()
+            token = self.get_activation_token_by_login(login=login)
+            end_time = time.time()
+            assert end_time - start_time < 5, "Время ожидания активации превышено"
+            assert token is not None, f"Токен для пользователя {login} не был получен"
+            response = self.activation_token(token=token)
+            return response
+        else:
+            response = self.dm_account_api.account_api.post_v1_account(registration=registration)
+            return response
 
     def reset_password(
             self,
@@ -105,6 +110,7 @@ class AccountHelper:
             validate_headers=False
             ):
 
+      
         login_credentials = LoginCredentials(
             login=login,
             password=password,
@@ -184,6 +190,7 @@ class AccountHelper:
         assert response.status_code == 204
         return response
 
+
     @retry(stop_max_attempt_number=5, retry_on_result=retry_if_result_none, wait_fixed=1000)
     def get_activation_token_by_login(
             self,
@@ -240,4 +247,5 @@ class AccountHelper:
     ):
         response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=True)
         return response
+
 
