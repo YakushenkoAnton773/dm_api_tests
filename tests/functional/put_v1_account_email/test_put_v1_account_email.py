@@ -1,6 +1,6 @@
 import time
 
-from checkers.http_ckeckers import check_status_code_http
+from checkers.http_checkers import check_status_code_http
 
 
 def test_put_v1_account_email(account_helper, prepare_user):

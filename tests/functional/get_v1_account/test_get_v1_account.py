@@ -1,5 +1,5 @@
 from checkers.get_v1_account import GetV1Account
-from checkers.http_ckeckers import check_status_code_http
+from checkers.http_checkers import check_status_code_http
 
 
 

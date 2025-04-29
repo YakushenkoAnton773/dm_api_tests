@@ -1,5 +1,5 @@
 import pytest
-from checkers.http_ckeckers import check_status_code_http
+from checkers.http_checkers import check_status_code_http
 from checkers.post_v1_account import PostV1Account
 
 
@@ -40,4 +40,4 @@ def test_post_v1_account_invalid_credentials(
         expected_status_code
 ):
     with check_status_code_http(expected_status_code=expected_status_code, expected_message=error_message):
-         account_helper.register_user_without_activate(login=login, password=password, email=email)
+         account_helper.register_new_user(login=login, password=password, email=email,with_activate= False )
