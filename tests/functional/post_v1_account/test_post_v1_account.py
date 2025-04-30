@@ -18,8 +18,9 @@ class TestPostV1Account:
         response = account_helper.user_login(login=login, password=password, validate_response=True)
         PostV1Account.check_response_values(response)
 
-
-
+@allure.suite("Тесты на проверку метода POST v1/account")
+@allure.sub_suite("Негативные тесты")
+@allure.title("Проверка регистрации нового пользователя c невалидными данными")
 @pytest.mark.parametrize(
     "login, email, password, error_message, expected_status_code",
     [
