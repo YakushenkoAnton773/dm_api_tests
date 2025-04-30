@@ -63,7 +63,7 @@ jobs:
     name: Publish report
     steps:
       - name: Download allure results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Upload allure report
         uses: actions/upload-pages-artifact@v2
       - name: Deploy to GitHub Pages
