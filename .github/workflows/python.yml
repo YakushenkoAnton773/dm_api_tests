@@ -62,6 +62,7 @@ jobs:
     needs: generate-report
     name: Publish report
     steps:
+      - uses: actions/checkout@v4
       - name: Download allure results
         uses: actions/download-artifact@v4
       - name: Upload allure report
