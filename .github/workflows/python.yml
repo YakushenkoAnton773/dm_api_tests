@@ -62,19 +62,20 @@ jobs:
     needs: generate-report
     steps:
       - uses: actions/checkout@v4
-      - name: Archive allure results
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results
-          path: allure-results  
-          retention-days: 1      
-      - name: Download allure results
+
+      - name: Download site report
         uses: actions/download-artifact@v4
         with:
-          name: allure-results
-      - name: Upload allure report
-        uses: actions/upload-pages-artifact@v3
+          name: _site        
+          path: _site        
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: _site        
+
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v1
+
       - run: echo "https://YakushenkoAnton773.github.io/dm_api_tests/"
 
