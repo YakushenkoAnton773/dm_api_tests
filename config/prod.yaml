@@ -5,3 +5,8 @@ service:
 user:
   login: "mystery15"
   password: "12345678"
+
+
+telegram:
+  chat_id: '-1002590634486'
+  token: '7617532682:AAHzAYUagi6IZyGHhEYavjL67Q2rsISbLEU'
